@@ -1,0 +1,79 @@
+PREREQUISITES
+-------------
+
+1. OpenCV-3.1.0 (http://docs.opencv.org/3.1.0/d7/d9f/tutorial_linux_install.html)
+
+2. cjson    (https://github.com/DaveGamble/cJSON)
+
+3. ffmpeg 3.3.1 (https://www.ffmpeg.org/download.html#releases)
+
+BUILDING THServer
+-----------------
+   A. WITHOUT ACCESS TO COMCAST REPO
+   ---------------------------------
+   1. If you are not having access to comcast repo, each component including server needs to be build manually.
+
+        i.  Refer the links provided above to download the required components.
+
+        ii. To build openCV use following set of commands:
+
+                NOTE: 1. All REQUIRED PACKAGES(mentioned in the link above) should be built before building opencv
+                      2. For X264 compatibility, while building ffmpeg enable libx264.The procedure for the same can be found in the link
+                         (https://trac.ffmpeg.org/wiki/How%20to%20quickly%20compile%20FFmpeg%20with%20libx264%20(x264%2C%20H.264))
+
+                #mkdir build
+                #cd build
+                #cmake -DCMAKE_INSTALL_PREFIX=/usr/local  -DWITH_GTK=ON -DENABLE_NEON=ON -DSOFTFP=OFF -DWITH_IPP=OFF ..
+                #make
+                #make install
+
+        iii. To build cjson use the following set of commands:
+
+                #mkdir build
+                #cd build
+                #cmake -DCMAKE_INSTALL_PREFIX=/usr/local
+                #make
+                #make install
+
+        iv.  To build THServer use the following set of commands:
+
+                #cd server
+                #export PKG_CONFIG_PATH=<path_to_pkg_config_file>
+                #make
+
+   2. THServer executable is build under THServer directory.
+
+   B.WITH ACCESS TO COMCAST REPO
+   -----------------------------
+
+   1. Get Build.sh from the comcast repo (PATH:master/video-analytics/tets-harness/Phase-II/server) to a directory on a the local system.
+
+   2. Run the Build.sh.
+
+    NOTE: All REQUIRED PACKAGES(mentioned in the link above) for opencv should be built before running Build.sh.
+
+	You can configure the following parameter in Build.sh
+	    a. DOWNLOAD_COMPONENTS -: if "yes" downloads the components from the repo.
+	    b. BUILD_OPENCV -: if "yes" builds the opencv.
+	    c. BUILD_CJSON  -: if "yes" builds the CJSON.
+	    d. BUILD_THSERVER -: if "yes" builds the THServer.
+
+   3. The executable THServer and depended libraries are copied to "./build/lib".
+
+RUNNING THServer
+----------------
+
+   1. ./THServer <path_to_config_file>
+
+   2. THServerConfig.txt has the following configurable parameters:
+        
+        a. port -> port on which the server listens for the incoming requests.
+        b. frame_limit -> specifically for camera feed, determine the number of frames to be written to a file.
+        c. source_video_dir -> specifically for file feed, determines the directory which contains the source video.
+        d. output_processed_video -> to enable output processed video.
+        e. support_imshow -> to enable the live processed frame display.
+	f. output_video_dir -> Directory to which processed videos and metadata for a particular clients is saved.
+	g. resize_frame -> to enable frame resizing.
+
+        NOTE:The parameter name should same as mentioned above in the config file.
+

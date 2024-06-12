@@ -1,0 +1,9 @@
+{
+  "name": "Device.X_RDKCENTRAL-COM_Camera.MotionDetection.RegionControl",
+  "provider" : "camera",
+  "is_list" : false,
+  "properties":
+    [
+        {"name": "Coords", "type": "string", "optional": false, "writable": true, "version": "2.0"}
+    ]
+}

@@ -1,0 +1,9 @@
+<environment>
+  <components>
+    <video-analytics>
+      <dependencies>sdk,rfc,rtmessage,rdklogger,plugins,opencv-3.1.0,cjson,breakpad,breakpadwrap,utility,camera-hal,libsyswrapper</dependencies>
+     <is_coverity_supported>True</is_coverity_supported>
+    </video-analytics>
+  </components>
+</environment>
+

@@ -73,13 +73,17 @@ export BUILD_PATH=${BUILD_PATH-`readlink -m ./build`}
 BUILD_FOLDER=`shopt -s extglob; echo ${BUILD_PATH%%+(/)}`
 echo $BUILD_FOLDER
 
+CURRENT_PATH=$(pwd)
+export PKG_CONFIG_PATH="$(pwd)/opencv/build/unix-install/"
+
 #Building opencv
 if [ $BUILD_OPENCV == 'yes' ]; then
 echo "*************** Building OpenCV ***************"
 cd opencv
 mkdir build 
 cd build
-cmake -DCMAKE_INSTALL_PREFIX=${PREFIX_FOLDER}  -DWITH_GTK=ON -DENABLE_NEON=ON -DSOFTFP=OFF -DWITH_IPP=OFF ..     #-DINSTALL_CREATE_DISTRIB=ON .
+export PKG_CONFIG_PATH="$(pwd)/opencv/build/unix-install/
+cmake -DCMAKE_INSTALL_PREFIX=${PREFIX_FOLDER} -DENABLE_PRECOMPILED_HEADERS=OFF -DWITH_GTK=ON -DENABLE_NEON=ON -DSOFTFP=OFF -DWITH_IPP=OFF ..     #-DINSTALL_CREATE_DISTRIB=ON .
 make
 make install
 cd ../..

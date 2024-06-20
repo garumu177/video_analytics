@@ -1,0 +1,21 @@
+#CAMERA_FEED
+frame_limit = <frame_limit>
+
+#VIDEO_FILE_FEED
+source_video_dir = /home/gokulraj/testharness_videos/videos
+
+#COMMON
+port = 8080
+output_video_dir = /home/gokulraj/testharness_videos/videosOutput
+
+#select the encoding format mjpeg/h264/hfyu
+encoding_format = h264
+
+#o/p processed video 
+output_processed_video = true
+
+#OPTIONAL
+support_imshow = false
+resize_frame = true
+resize_resolution = 352x240
+raw_video = false

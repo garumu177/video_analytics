@@ -153,24 +153,24 @@ fi
 # Build THServer if needed
 if [ $BUILD_THSERVER == 'yes' ]; then
     echo "*************** Building THServer ***************"
-    cd ${current_path}/
+    cd ${current_path}/test-harness/Phase_II/server/
     export PKG_CONFIG_PATH="$PREFIX_FOLDER/lib/pkgconfig:$PREFIX_FOLDER/lib64/pkgconfig"
     if [ "$MAKE_CLEAN" == "yes" ]; then
         make clean
-    fi  
-    export CXXFLAGS="-I${PREFIX_FOLDER}/include/cJSON $CXXFLAGS" 
+    fi
+    export CXXFLAGS="-I${PREFIX_FOLDER}/include/cJSON $CXXFLAGS"
     export LD_LIBRARY_PATH=${PREFIX_FOLDER}/lib:${PREFIX_FOLDER}/lib64:$LD_LIBRARY_PATH
     echo "raj ${PREFIX_FOLDER}"
-    make CXXFLAGS="-I${PREFIX_FOLDER}/include -I${current_path}/SocketServer" \
-         LDFLAGS="-L${PREFIX_FOLDER}/lib -L${PREFIX_FOLDER}/lib64 -lcjson $(pkg-config --cflags --libs opencv) -L${current_path}/SocketServer -lsocketserver"
+    make CXXFLAGS="-I${PREFIX_FOLDER}/include -I${current_path}/test-harness/Phase_II/server/SocketServer" \
+         LDFLAGS="-L${PREFIX_FOLDER}/lib -L${PREFIX_FOLDER}/lib64 -lcjson $(pkg-config --cflags --libs opencv) -L${current_path}/test-harness/Phase_II/server/SocketServer -lsocketserver"
     echo "*************** THServer Built Successfully ***************"
     echo "*************** Removing existing libraries ***************"
     rm -rvf $BUILD_FOLDER/lib/*
     echo "*************** Copying new libraries ***************"
     cp -rvf $PREFIX_FOLDER/lib/*  $BUILD_FOLDER/lib/
     cp -rvf $PREFIX_FOLDER/lib64/*  $BUILD_FOLDER/lib/
-    cp -rvf ${current_path}/SocketServer/*.so $BUILD_FOLDER/lib/
-    cp -rvf ${current_path}/THServer/THServer $BUILD_FOLDER/lib/
+    cp -rvf ${current_path}/test-harness/Phase_II/server/SocketServer/*.so $BUILD_FOLDER/lib/
+    cp -rvf ${current_path}/test-harness/Phase_II/server/THServer/THServer $BUILD_FOLDER/lib/
     export LD_LIBRARY_PATH=$BUILD_FOLDER/lib/
 fi
 

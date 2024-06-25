@@ -9,12 +9,12 @@ function error_exit {
 }
 
 # Default values for build options
-BUILD_ESSENTIAL="no"
-DOWNLOAD_COMPONENTS="no"
-MAKE_CLEAN="yes"
-BUILD_FFMPEG="no"
-BUILD_OPENCV="no"
-BUILD_CJSON="no"
+BUILD_ESSENTIAL="yes"
+DOWNLOAD_COMPONENTS="yes"
+MAKE_CLEAN="no"
+BUILD_FFMPEG="yes"
+BUILD_OPENCV="yes"
+BUILD_CJSON="yes"
 BUILD_THSERVER="yes"
 CLEAN_FFMPEG="no"
 

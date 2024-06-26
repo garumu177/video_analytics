@@ -76,7 +76,7 @@ if [ "$DOWNLOAD_COMPONENTS" == "yes" ]; then
 
     echo "Cloning cJSON source from GitHub..."
     cd ${current_path}/
-    git clone https://github.com/DaveGamble/cJSON.git || error_exit "Failed to clone cJSON repository"
+    git clone --branch v1.7.14 https://github.com/DaveGamble/cJSON.git || error_exit "Failed to clone cJSON repository"
 fi
 
 # Build FFmpeg if needed

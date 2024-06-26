@@ -9,6 +9,7 @@ function error_exit {
 }
 
 # Default values for build options
+#BUILD_ESSENTIAL -> If this script can install essentail package, then try to install manually
 BUILD_ESSENTIAL="yes"
 DOWNLOAD_COMPONENTS="yes"
 MAKE_CLEAN="no"
@@ -16,6 +17,7 @@ BUILD_FFMPEG="yes"
 BUILD_OPENCV="yes"
 BUILD_CJSON="yes"
 BUILD_THSERVER="yes"
+COPY_LIB="yes"
 CLEAN_FFMPEG="no"
 
 current_path=$(pwd)
@@ -79,6 +81,29 @@ if [ "$DOWNLOAD_COMPONENTS" == "yes" ]; then
     git clone --branch v1.7.14 https://github.com/DaveGamble/cJSON.git || error_exit "Failed to clone cJSON repository"
 fi
 
+
+function verify_lib264
+{
+    echo "Verifying libx264 installation..."
+    if [ -f "${PREFIX_FOLDER}/lib/libx264.a" ] || [ -f "${PREFIX_FOLDER}/lib/libx264.so" ]; then
+        echo "libx264 library files found."
+    else
+        error_exit "libx264 library files not found in ${PREFIX_FOLDER}/lib"
+    fi
+
+    if [ -f "${PREFIX_FOLDER}/include/x264.h" ] && [ -f "${PREFIX_FOLDER}/include/x264_config.h" ]; then
+        echo "libx264 header files found."
+    else
+        error_exit "libx264 header files not found in ${PREFIX_FOLDER}/include"
+    fi
+
+    if [ -f "${PREFIX_FOLDER}/lib/pkgconfig/x264.pc" ]; then
+        echo "libx264 pkg-config file found."
+    else
+        error_exit "libx264 pkg-config file not found in ${PREFIX_FOLDER}/lib/pkgconfig"
+    fi
+}
+
 # Build FFmpeg if needed
 if [ "$BUILD_FFMPEG" == "yes" ]; then
     cd ${current_path}/ffmpeg_sources/x264
@@ -95,8 +120,13 @@ if [ "$BUILD_FFMPEG" == "yes" ]; then
     if [ "$MAKE_CLEAN" == "yes" ]; then
         make clean
     fi
-    PKG_CONFIG_PATH="$ffmpeg_build_path/lib/pkgconfig"
+    PKG_CONFIG_PATH="$ffmpeg_build_path/lib/pkgconfig::$PKG_CONFIG_PATH"
+    export LD_LIBRARY_PATH="$PREFIX_FOLDER/lib:$LD_LIBRARY_PATH"
+    #Note : If libx264 can't find the path by pkgconfig, try to give in hard code
+    #export PKG_CONFIG_PATH="/home/garumu177/video_analytics/opensource/lib/pkgconfig:$PKG_CONFIG_PATH"
+    #export LD_LIBRARY_PATH="/home/garumu177/video_analytics/opensource/lib:$LD_LIBRARY_PATH"
     export PKG_CONFIG_PATH
+    verify_lib264
     ./configure --prefix=${PREFIX_FOLDER} --enable-gpl --enable-libx264 --enable-shared --disable-static || error_exit "Failed to configure ffmpeg"
     echo "Compiling ffmpeg..."
     make || error_exit "Failed to compile ffmpeg"
@@ -156,14 +186,18 @@ if [ $BUILD_THSERVER == 'yes' ]; then
     cd ${current_path}/test-harness/Phase_II/server/
     export PKG_CONFIG_PATH="$PREFIX_FOLDER/lib/pkgconfig:$PREFIX_FOLDER/lib64/pkgconfig"
     if [ "$MAKE_CLEAN" == "yes" ]; then
+        echo "make clean THserver"
         make clean
     fi
     export CXXFLAGS="-I${PREFIX_FOLDER}/include/cJSON $CXXFLAGS"
     export LD_LIBRARY_PATH=${PREFIX_FOLDER}/lib:${PREFIX_FOLDER}/lib64:$LD_LIBRARY_PATH
-    echo "raj ${PREFIX_FOLDER}"
     make CXXFLAGS="-I${PREFIX_FOLDER}/include -I${current_path}/test-harness/Phase_II/server/SocketServer" \
          LDFLAGS="-L${PREFIX_FOLDER}/lib -L${PREFIX_FOLDER}/lib64 -lcjson $(pkg-config --cflags --libs opencv) -L${current_path}/test-harness/Phase_II/server/SocketServer -lsocketserver"
     echo "*************** THServer Built Successfully ***************"
+fi
+
+#copy all lib and bin file on one folder
+if [ $COPY_LIB == 'yes' ]; then
     echo "*************** Removing existing libraries ***************"
     rm -rvf $BUILD_FOLDER/lib/*
     echo "*************** Copying new libraries ***************"

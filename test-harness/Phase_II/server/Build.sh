@@ -82,7 +82,7 @@ echo "*************** Building OpenCV ***************"
 cd opencv
 mkdir build 
 cd build
-export PKG_CONFIG_PATH="$(pwd)/opencv/build/unix-install/
+export PKG_CONFIG_PATH="$(pwd)/opencv/build/unix-install/"
 cmake -DCMAKE_INSTALL_PREFIX=${PREFIX_FOLDER} -DENABLE_PRECOMPILED_HEADERS=OFF -DWITH_GTK=ON -DENABLE_NEON=ON -DSOFTFP=OFF -DWITH_IPP=OFF ..     #-DINSTALL_CREATE_DISTRIB=ON .
 make -j5
 make install
